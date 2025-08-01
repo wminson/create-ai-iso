@@ -167,25 +167,31 @@ sudo ./post-install.sh
 - ✅ Sets up file descriptor limits
 - ✅ Enables required services
 
-### Step 2: Configure Environment Variables
+### Step 2: Interactive Configuration
 
 ```bash
-# Copy environment template
-cp .env.example .env
-
-# Edit with secure passwords
-nano .env
+# Run interactive configuration wizard
+./setup.sh
 ```
 
-**Important**: Replace all default passwords with secure ones:
+**What this interactive script does**:
+- 🔐 **Auto-generates secure passwords** for all services
+- 💬 **Simple prompts** for usernames and settings
+- 🎯 **GPU optimization** for RTX 3090 hardware
+- 📄 **Creates .env file automatically**
+- ✅ **Validates Docker installation**
+
+**Interactive prompts include**:
+- Database and storage credentials  
+- Service usernames and passwords
+- AI model configuration
+- System settings (timezone, GPU)
+
+**Alternative manual method**:
 ```bash
-# Example .env configuration
-POSTGRES_PASSWORD=your_very_secure_postgres_password
-MINIO_ROOT_PASSWORD=your_very_secure_minio_password
-N8N_BASIC_AUTH_PASSWORD=your_very_secure_n8n_password
-LANGFUSE_SECRET_KEY=your_32_character_secret_key_here
-FLOWISE_PASSWORD=your_very_secure_flowise_password
-GF_SECURITY_ADMIN_PASSWORD=your_very_secure_grafana_password
+# If you prefer manual configuration
+cp .env.example .env
+nano .env  # Edit with your own secure passwords
 ```
 
 ### Step 3: Initialize AI Services
@@ -227,26 +233,58 @@ After successful setup, access your AI services through web browser:
   - Model management
   
 - **🔧 n8n**: http://your-server-ip:5678
-  - Workflow automation
+  - Workflow automation with 400+ integrations
+  - Advanced AI components
   - Login: admin / [your_n8n_password]
   
 - **📊 Langfuse**: http://your-server-ip:3001
   - LLM observability and monitoring
+  - Agent performance tracking
   - Create account on first visit
 
 ### Advanced AI Tools
 - **🌊 Flowise**: http://your-server-ip:3002
   - Low-code AI application builder
+  - Drag-and-drop AI workflows
   - Login: admin / [your_flowise_password]
+
+### Vector & Graph Databases
+- **🧠 Neo4j Browser**: http://your-server-ip:7474
+  - Knowledge graph visualization
+  - GraphRAG capabilities
+  - Login: neo4j / [your_neo4j_password]
+  
+- **🎯 Qdrant Dashboard**: http://your-server-ip:6333/dashboard
+  - High-performance vector search
+  - Collection management
+  - API documentation
+
+### Search & Web Services
+- **🔍 SearXNG**: http://your-server-ip:8080
+  - Privacy-focused metasearch
+  - Aggregates 229 search engines
+  - No tracking or profiling
 
 ### Monitoring & Storage
 - **📈 Grafana**: http://your-server-ip:3003
   - System monitoring dashboards
+  - AI performance metrics
   - Login: admin / [your_grafana_password]
+  
+- **📊 Prometheus**: http://your-server-ip:9090
+  - Metrics collection and queries
+  - Alert management
   
 - **🗄️ MinIO Console**: http://your-server-ip:9001
   - Object storage management
+  - S3-compatible API
   - Login: minioadmin / [your_minio_password]
+
+### Reverse Proxy
+- **🌐 Caddy**: http://your-server-ip
+  - Automatic HTTPS certificates
+  - Service routing dashboard
+  - Custom domain management
 
 ---
 

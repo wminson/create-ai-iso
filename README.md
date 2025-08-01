@@ -6,21 +6,23 @@ This directory contains the complete custom Ubuntu Server ISO with embedded AI i
 
 Your custom Ubuntu Server AI ISO has been successfully created and is ready for deployment!
 
-## 📁 Final Project Structure
+## 📁 Clean Project Structure
 
-### ✅ Essential Files
-- **`manual-build.sh`** - Working ISO builder script (successfully tested)
+### 🔧 Build Scripts
+- **`manual-build.sh`** - ISO builder script (tested and working)
+- **`enhanced-ai-setup.sh`** - AI configuration generator
 - **`preseed.cfg`** - Automated installation configuration
 - **`package-list.txt`** - Additional packages specification
-- **`validate-iso.sh`** - ISO validation and testing script
-- **`check-build-status.sh`** - Build status verification script
 
-### 📦 ISO Files
-- **`ubuntu-24.04.2-live-server-amd64.iso`** - Original Ubuntu Server ISO (3.0GB)
-- **`ubuntu-24.04.1-server-amd64.iso`** - Backup Ubuntu Server ISO
-- **`ubuntu-24.04.2-server-ai-amd64.iso`** - **YOUR CUSTOM AI SERVER ISO** (3.0GB) ✅
+### 📦 ISO Files  
+- **`ubuntu-24.04.2-live-server-amd64.iso`** - Original Ubuntu Server ISO (3.1GB)
+- **`ubuntu-24.04.2-server-ai-amd64.iso`** - **YOUR CUSTOM AI SERVER ISO** (3.1GB) ✅
 - **`ubuntu-24.04.2-server-ai-amd64.iso.md5`** - MD5 checksum
 - **`ubuntu-24.04.2-server-ai-amd64.iso.sha256`** - SHA256 checksum
+
+### 📚 Documentation
+- **`README.md`** - Project overview and quick start
+- **`HOW-TO-USE.md`** - Complete installation and usage guide
 
 ## 🚀 What's Included in Your Custom ISO
 
@@ -32,15 +34,26 @@ Your custom Ubuntu Server AI ISO has been successfully created and is ready for 
 - **Security Hardened**: Firewall rules and SSH configuration
 - **System Optimized**: Memory management and network tuning for AI workloads
 
-### 🛠️ Embedded AI Services
+### 🛠️ Embedded AI Services (Enhanced Configuration)
+
+#### Original srv-AI-01 Services:
 - **Ollama**: AI model server with GPU support
-- **Open WebUI**: Web interface for AI models
+- **Open WebUI**: Web interface for AI models  
 - **n8n**: Workflow automation platform
 - **Milvus**: Vector database for RAG
 - **Langfuse**: LLM observability and monitoring
 - **Flowise**: Low-code AI application builder
 - **PostgreSQL, Redis, MinIO**: Supporting services
 - **Grafana, Prometheus**: Monitoring and metrics
+
+#### Additional Services from Local AI Packaged:
+- **Qdrant**: High-performance vector database (alternative to Milvus)
+- **Neo4j**: Knowledge graph engine for GraphRAG, LightRAG
+- **SearXNG**: Privacy-focused metasearch engine (229 search services)
+- **Caddy**: Automatic HTTPS reverse proxy with SSL
+- **Enhanced n8n**: 400+ integrations and advanced AI components
+- **Enhanced Flowise**: Better integration with other services
+- **Supabase**: Open-source database and authentication (optional)
 
 ## 🚀 Quick Deployment
 
@@ -64,22 +77,35 @@ sudo passwd aiserver
 # Run post-installation setup
 sudo ~/ai-setup/post-install.sh
 
-# Configure AI services
+# Interactive AI services configuration (NEW!)
 cd ~/ai-setup
-cp .env.example .env
-nano .env  # Edit with secure passwords
-./setup.sh
+./setup.sh  # 🎯 Interactive wizard with auto-generated passwords!
 ./manage.sh start
 ```
 
+**🆕 Interactive Setup Features**:
+- **Auto-generates secure passwords** for all services  
+- **GPU optimization** for RTX 3090 + 198GB RAM
+- **Simple guided prompts** for configuration
+- **No manual .env editing required!**
+
 ### 4. Access AI Services
 After setup completion:
+
+#### Core AI Services:
 - **Open WebUI**: http://server-ip:3000 (AI chat interface)
-- **n8n**: http://server-ip:5678 (Workflow automation)
+- **n8n**: http://server-ip:5678 (Workflow automation with 400+ integrations)
 - **Langfuse**: http://server-ip:3001 (LLM observability)
 - **Flowise**: http://server-ip:3002 (Low-code AI)
 - **Grafana**: http://server-ip:3003 (Monitoring)
 - **MinIO**: http://server-ip:9001 (Object storage)
+
+#### Additional Enhanced Services:
+- **Neo4j Browser**: http://server-ip:7474 (Knowledge graph)
+- **Qdrant Dashboard**: http://server-ip:6333/dashboard (Vector DB)
+- **SearXNG**: http://server-ip:8080 (Private search)
+- **Prometheus**: http://server-ip:9090 (Metrics)
+- **Caddy**: http://server-ip (Reverse proxy dashboard)
 
 ## 💻 Target System Requirements
 
@@ -115,8 +141,8 @@ sudo ./manual-build.sh
 
 ## 📋 File Checksums
 
-**MD5**: `e073c4da025bbbaef16207715c7a8e74`  
-**SHA256**: `1a02a697c0b949e382651025e8372b16f7779391a35ac2e002f47b5f0f2a019d`
+**MD5**: `750a8f699aa002c533c86e5cc3c5368d`  
+**SHA256**: `7109d22691476dcb192688f819d5d98bddfbb92a8d47245c323c4a15f2631428`
 
 ## 🔒 Security & Troubleshooting
 

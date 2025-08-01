@@ -38,19 +38,107 @@ mkdir -p "$WORK_DIR/preseed"
 cp preseed.cfg "$WORK_DIR/preseed/"
 
 mkdir -p "$WORK_DIR/ai-setup"
+
+# Create enhanced AI configuration
+echo "   Creating enhanced AI configuration with Local AI Packaged services..."
+./enhanced-ai-setup.sh
+cp -r enhanced-ai-server/* "$WORK_DIR/ai-setup/"
+
+# Also copy original srv-AI-01 if it exists
 if [ -d "../srv-AI-01" ]; then
-    cp -r ../srv-AI-01/* "$WORK_DIR/ai-setup/"
+    echo "   Including original srv-AI-01 configuration..."
+    mkdir -p "$WORK_DIR/ai-setup/original-srv-ai-01"
+    cp -r ../srv-AI-01/* "$WORK_DIR/ai-setup/original-srv-ai-01/"
 fi
 
-# Simple post-install script
+# Enhanced post-install script
 cat > "$WORK_DIR/ai-setup/post-install.sh" << 'EOF'
 #!/bin/bash
-echo "🤖 Installing Docker and AI tools..."
+echo "🤖 Enhanced AI Server Post-Installation Setup"
+echo "==========================================="
+
+# Update system
+echo "📦 Updating system packages..."
 apt update && apt upgrade -y
+
+# Install essential packages
+apt install -y curl wget git nano vim htop build-essential software-properties-common
+
+# Install Docker
+echo "🐳 Installing Docker..."
 curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
 usermod -aG docker aiserver
+
+# Install Docker Compose
+echo "🐳 Installing Docker Compose..."
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+# Install NVIDIA drivers if GPU detected
+if lspci | grep -i nvidia &> /dev/null; then
+    echo "🎮 NVIDIA GPU detected, installing drivers..."
+    apt install -y nvidia-driver-535
+    
+    # Install NVIDIA Container Toolkit
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | \
+        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+        tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    
+    apt update && apt install -y nvidia-container-toolkit
+    
+    # Configure Docker for GPU
+    nvidia-ctk runtime configure --runtime=docker
+    systemctl restart docker
+else
+    echo "ℹ️  No NVIDIA GPU detected"
+fi
+
+# System optimizations for AI workloads
+echo "⚡ Applying system optimizations..."
+echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+echo 'fs.file-max = 2097152' >> /etc/sysctl.conf
+echo '* soft nofile 65536' >> /etc/security/limits.conf
+echo '* hard nofile 65536' >> /etc/security/limits.conf
+
+# Configure firewall
+echo "🔥 Configuring firewall..."
+ufw --force enable
+ufw default deny incoming
+ufw default allow outgoing
+
+# Allow ports for enhanced AI services
+ufw allow 22/tcp     # SSH
+ufw allow 80/tcp     # HTTP (Caddy)
+ufw allow 443/tcp    # HTTPS (Caddy)
+ufw allow 3000/tcp   # Open WebUI
+ufw allow 3001/tcp   # Langfuse
+ufw allow 3002/tcp   # Flowise
+ufw allow 3003/tcp   # Grafana
+ufw allow 5678/tcp   # n8n
+ufw allow 6333/tcp   # Qdrant
+ufw allow 7474/tcp   # Neo4j Browser
+ufw allow 7687/tcp   # Neo4j Bolt
+ufw allow 8080/tcp   # SearXNG
+ufw allow 9000/tcp   # MinIO
+ufw allow 9001/tcp   # MinIO Console
+ufw allow 9090/tcp   # Prometheus
+ufw allow 11434/tcp  # Ollama
+ufw allow 19530/tcp  # Milvus
+
+# Enable services
 systemctl enable docker
-echo "✅ Basic setup complete - reboot and run ./setup.sh"
+
+echo "✅ Enhanced AI Server post-installation complete!"
+echo ""
+echo "🚀 Next steps:"
+echo "1. Reboot the system"
+echo "2. Login and navigate to: cd ~/ai-setup"
+echo "3. Run: ./setup.sh"
+echo "4. Configure passwords in .env file"
+echo "5. Start services: ./manage.sh start"
+echo "6. Install AI models: ./install-models.sh"
 EOF
 
 chmod +x "$WORK_DIR/ai-setup/post-install.sh"
