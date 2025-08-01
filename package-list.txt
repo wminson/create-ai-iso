@@ -1,0 +1,64 @@
+# Essential packages for AI Server
+openssh-server
+curl
+wget
+git
+nano
+vim
+htop
+iotop
+nethogs
+build-essential
+linux-headers-generic
+dkms
+software-properties-common
+apt-transport-https
+ca-certificates
+gnupg
+lsb-release
+unzip
+ncdu
+net-tools
+ufw
+fail2ban
+
+# System monitoring and utilities
+nvtop
+tree
+tmux
+screen
+rsync
+zip
+unrar
+
+# Development tools
+python3
+python3-pip
+python3-venv
+nodejs
+npm
+
+# Network tools
+nmap
+telnet
+traceroute
+whois
+dig
+
+# Container and virtualization
+containerd.io
+
+# Security tools
+chkrootkit
+rkhunter
+clamav
+clamav-daemon
+
+# Performance tuning
+tuned
+cpufrequtils
+
+# File system tools
+lvm2
+cryptsetup
+mdadm
